@@ -4,6 +4,8 @@ import Header from './components/Header';
 import AIButton from './components/AIButton';
 import AIModal from './components/AIModal';
 import { startAssistant, stopAssistant } from './components/AggorA';
+import "./components/chatbox";
+import ChatBox from './components/chatbox';
 
 function App() {
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
@@ -55,16 +57,24 @@ function App() {
       <Sidebar />
       <Header />
 
-      <main className="ml-20 mt-16 h-[calc(100vh-64px)] flex items-center justify-center p-8">
-        <div className="text-center">
-          <h2 className="text-5xl font-light text-[#E2E8F0] mb-4 tracking-wide">
+      <main className="ml-20 mt-16  flex-row items-center justify-around p-8">
+        <div className="">
+          <div className="flex justify-between">
+            <h2 className="text-5xl font-light text-[#E2E8F0] mb-4 tracking-wide">
             Welcome to <span className="text-[#BDB1A1]">InventoryX</span>
           </h2>
+            <AIButton onClick={handleMicClick} isListening={isAIModalOpen} />
+          
+          </div>
+          
+          <div className="text-center">
+            <ChatBox/>
+          </div>
           <p className="text-[#A0AEC0] text-lg font-light mb-16">
             Manage your business with conversational AI
           </p>
 
-          <AIButton onClick={handleMicClick} isListening={isAIModalOpen} />
+          
         </div>
       </main>
 
