@@ -19,5 +19,6 @@ urlpatterns = [
     re_path(r'^listLessIt/?$', views.listStockLess, name='stockless'),
     re_path(r'^updateItem/(?P<name>[^/]+)/?$', views.updateItem, name='updateItem'),
     re_path(r'^webhook/?$', views.webhook, name='webhook'),
-    re_path(r'^join/?$', views.join_agora, name='join')
+    re_path(r'^join/?$', views.join_agora, name='join'),
+    re_path(r'^gemm/?$', views.gemm, name='gemm')
 ]
