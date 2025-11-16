@@ -48,6 +48,24 @@ export async function startAssistant() {
                 'Content-Type': 'application/json',
             },
         });
+        console.log('🔄 Fetching join data from backend...');
+        const rusResp = await fetch("http://127.0.0.1:8000/gemm/", {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ text: "Hey how are you?" })
+        });
+
+        // Parse response (JSON if possible), keep variable name `rus` used later
+        let rus: any;
+        if (rusResp.headers.get('content-type')?.includes('application/json')) {
+            rus = await rusResp.json();
+        } else {
+            rus = await rusResp.text();
+        }
+
+        console.log(rus)
 
         if (!res.ok) {
             // Try to get error message from response

@@ -9,6 +9,7 @@ from .models import *
 import requests
 from .RtcTokenBuilder import *
 import requests
+from google import genai
 
 
 # Create your views here.
@@ -146,6 +147,27 @@ def join_agora(request):
         import traceback
         print(traceback.format_exc())
         return JsonResponse({"error": str(e)})
+    
+@api_view(['POST'])
+def gemm(request):
+    body = json.loads(request.body)
+    text = body.get("text", "").lower()
+    print(text)
+
+    api_key = "api_key"
+    # The client gets the API key from the environment variable `GEMINI_API_KEY`.
+    # api_key = os.getenv("GEMINI_API_KEY")
+
+    # Configure the client with the API key
+    # genai.configure(api_key=api_key)
+
+    client = genai.Client(api_key=api_key)
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash", contents=text
+    )
+    # print(response.text)
+    return Response({"result": response.text}, status=200)
 
 
 def webhook(request):
