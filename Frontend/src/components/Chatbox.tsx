@@ -3,8 +3,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent } from "./ui/card";
-
-const genAI = new GoogleGenerativeAI("VITE-API-KEY(USE .env)");
+const someKey = import.meta.env.VITE_GEMINI_API_KEY;
+const genAI = new GoogleGenerativeAI(someKey);
 
 export default function ChatBox() {
   const [messages, setMessages] = useState([]);
