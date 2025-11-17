@@ -24,7 +24,7 @@ export default function ChatBox() {
       STEP 1 — INTENT DETECTION USING GEMINI
   ---------------------------------------------------------------- */
   async function detectIntent(message: string) {
-  const prompt = `
+    const prompt = `
 You are an INTENT CLASSIFIER for an INVENTORY SYSTEM.
 You DO NOT answer normally. You ONLY output JSON.
 
@@ -83,24 +83,24 @@ For API:
 NO explanation, NO extra text. JSON ONLY.
 `;
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-  const result = await model.generateContent(prompt + "\nUser: " + message);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const result = await model.generateContent(prompt + "\nUser: " + message);
 
-  try {
-    let raw = result.response.text();     // string
-    raw = raw.replace(/```json|```/g, "").trim();
-    console.log("RAW:", raw);
+    try {
+      let raw = result.response.text();     // string
+      raw = raw.replace(/```json|```/g, "").trim();
+      console.log("RAW:", raw);
 
-    // Convert string → JSON object
-    const data = JSON.parse(raw);
+      // Convert string → JSON object
+      const data = JSON.parse(raw);
 
-    // console.log(data.intent);   // "api"
-    console.log(data); 
-    return {intent: data, action: data.action};
-  } catch {
-    return { intent: "chat", action: "chat" };
+      // console.log(data.intent);   // "api"
+      console.log(data);
+      return { intent: data, action: data.action };
+    } catch {
+      return { intent: "chat", action: "chat" };
+    }
   }
-}
 
 
   /* ----------------------------------------------------------------
@@ -179,17 +179,24 @@ NO explanation, NO extra text. JSON ONLY.
       .join("\n");
   }
 
-  function summarizeItem(name: string, itemData: any) {
+  async function summarizeItem(name: string, itemData: any) {
     if (!itemData || itemData.error)
       return `No item named "${name}" was found.`;
 
-    return `
+    const promp = `
+Summarize this (Note - this user stock details!)
 Item: ${itemData.name}
 Stock: ${itemData.stock}
 Expires: ${itemData.expiry_date}
 Added On: ${itemData.created_at}
-    `;
+  `;
+
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const result = await model.generateContent(promp);
+
+    return result.response.text();   // ✅ FIXED
   }
+
 
   /* ----------------------------------------------------------------
       MAIN HANDLER
@@ -206,7 +213,9 @@ Added On: ${itemData.created_at}
       const intent = await detectIntent(userMsg);
       const action = await detectIntent(userMsg);
 
-      if (intent.intent === "chat") {
+      console.log(intent.intent.intent)
+
+      if (intent.intent.intent === "chat") {
         // normal chat response
         const chatModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         const chatRes = await chatModel.generateContent(userMsg);
@@ -248,11 +257,10 @@ Added On: ${itemData.created_at}
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`p-3 rounded-xl max-w-[80%] whitespace-pre-wrap ${
-                  m.role === "user"
+                className={`p-3 rounded-xl max-w-[80%] whitespace-pre-wrap ${m.role === "user"
                     ? "ml-auto bg-blue-600 text-white"
                     : "mr-auto bg-neutral-800 text-gray-200"
-                }`}
+                  }`}
               >
                 {m.text}
               </div>
