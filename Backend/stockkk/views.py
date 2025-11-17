@@ -10,6 +10,7 @@ import requests
 from .RtcTokenBuilder import *
 import requests
 from google import genai
+from dotenv import load_dotenv
 
 
 # Create your views here.
@@ -154,9 +155,9 @@ def gemm(request):
     text = body.get("text", "").lower()
     print(text)
 
-    api_key = "api_key"
+    load_dotenv()
     # The client gets the API key from the environment variable `GEMINI_API_KEY`.
-    # api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("VITE_GEMINI_API_KEY")
 
     # Configure the client with the API key
     # genai.configure(api_key=api_key)
