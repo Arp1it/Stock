@@ -139,7 +139,13 @@ NO explanation, NO extra text. JSON ONLY.
         body: JSON.stringify(body)
       });
 
-      return `${intent.intent.item} added successfully! 🎉`;
+      if (res.status == 200){
+        return `${intent.intent.item} added successfully! 🎉`;
+      }
+      else{
+        const data = await res.json()
+        return data.name[0];
+      }
     }
 
     if (action.action === "updateItem") {
